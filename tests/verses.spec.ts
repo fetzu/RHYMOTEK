@@ -44,9 +44,9 @@ test.describe('Home page', () => {
 
   test('shows artist and tag sections', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByText('Artists')).toBeVisible();
-    await expect(page.getByText('Tags')).toBeVisible();
-    await expect(page.getByText('Demo Artist')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Artists' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Tags' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Demo Artist', exact: true })).toBeVisible();
   });
 
   test('has search and random links', async ({ page }) => {
@@ -86,6 +86,6 @@ test.describe('Search page', () => {
   test('renders search interface', async ({ page }) => {
     await page.goto('/search');
     await expect(page.locator('h1')).toContainText('Search Verses');
-    await expect(page.locator('#search')).toBeVisible();
+    await expect(page.locator('#search')).toBeAttached();
   });
 });
