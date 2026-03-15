@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer } from 'react';
 import type { EditorState, EditorAction, AnalysisGroup } from './types';
 
 let groupCounter = 0;

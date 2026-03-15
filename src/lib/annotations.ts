@@ -1,4 +1,6 @@
-import { annotate, type RoughAnnotation } from 'rough-notation';
+import { annotate } from 'rough-notation';
+
+type RoughAnnotation = ReturnType<typeof annotate>;
 
 const activeAnnotations: RoughAnnotation[] = [];
 
