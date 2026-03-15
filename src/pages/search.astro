@@ -15,9 +15,8 @@ import Header from '../components/Header.astro';
 </BaseLayout>
 
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-<script>
+<script is:inline>
   async function initSearch() {
-    // @ts-ignore
     const { PagefindUI } = await import('/pagefind/pagefind-ui.js');
     new PagefindUI({
       element: '#search',
