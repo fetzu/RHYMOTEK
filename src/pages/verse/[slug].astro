@@ -15,6 +15,17 @@ export async function getStaticPaths() {
 const { verse } = Astro.props;
 const { title, artist, album, year, backgroundColor, textColor, accentColor, lines, tags, analysisGroups } = verse.data;
 const verseText = lines.map((l) => l.words.map((w) => w.text).join(' ')).join(' / ');
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  author: { '@type': 'Person', name: artist },
+  ...(album && { isPartOf: { '@type': 'MusicAlbum', name: album } }),
+  ...(year && { dateCreated: String(year) }),
+  text: verseText,
+  url: new URL(`/verse/${verse.data.slug}/`, Astro.site ?? 'https://rhymotek.com').href,
+});
 ---
 
 <VerseLayout
@@ -24,6 +35,9 @@ const verseText = lines.map((l) => l.words.map((w) => w.text).join(' ')).join(' 
   textColor={textColor}
   accentColor={accentColor}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
   <div data-pagefind-body>
     <div data-pagefind-meta={`title:${title}`}></div>
     <div data-pagefind-meta={`artist:${artist}`}></div>

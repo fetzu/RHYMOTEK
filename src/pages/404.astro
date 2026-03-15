@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+---
+
+<BaseLayout title="Page Not Found">
+  <div class="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col">
+    <Header />
+    <main class="flex-1 flex flex-col items-center justify-center px-6">
+      <h1 class="font-display text-6xl font-bold mb-4">404</h1>
+      <p class="text-neutral-400 text-lg mb-8">This verse doesn't exist yet.</p>
+      <div class="flex gap-4">
+        <a
+          href="/"
+          class="px-5 py-2.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors text-sm font-medium"
+        >
+          Go Home
+        </a>
+        <a
+          href="/random"
+          class="px-5 py-2.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors text-sm font-medium"
+        >
+          Random Verse
+        </a>
+      </div>
+    </main>
+  </div>
+</BaseLayout>

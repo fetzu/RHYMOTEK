@@ -26,6 +26,9 @@ const { lines } = Astro.props;
             class="verse-word inline cursor-pointer select-none transition-opacity hover:opacity-80"
             data-word-id={word.wordId}
             id={word.wordId}
+            role="button"
+            tabindex="0"
+            aria-label={`Analyze word: ${word.text}`}
           >
             {word.text}
           </span>

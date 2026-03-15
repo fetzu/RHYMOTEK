@@ -104,6 +104,16 @@ export default function VerseInteractive({ analysisGroups, accentColor }: Props)
     const handleKeydown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && activeGroupId) {
         dismiss();
+        return;
+      }
+
+      // Allow Enter/Space to activate words (keyboard accessibility)
+      if (e.key === 'Enter' || e.key === ' ') {
+        const target = e.target as HTMLElement;
+        if (target.closest('[data-word-id]')) {
+          e.preventDefault();
+          target.click();
+        }
       }
     };
 

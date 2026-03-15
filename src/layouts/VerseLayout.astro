@@ -16,6 +16,7 @@ const pageDescription = description ?? `${title} by ${artist} — explore the ly
 ---
 
 <BaseLayout title={`${title} — ${artist}`} description={pageDescription}>
+  <slot name="head" slot="head" />
   <div
     class="min-h-screen flex flex-col items-center justify-center px-4 py-12 transition-colors"
     style={`--bg: ${backgroundColor}; --text: ${textColor}; --accent: ${accentColor}; background-color: ${backgroundColor}; color: ${textColor};`}
