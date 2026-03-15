@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import VerseLayout from '../../layouts/VerseLayout.astro';
 import VerseDisplay from '../../components/VerseDisplay.astro';
+import VerseInteractive from '../../components/VerseInteractive';
 
 export async function getStaticPaths() {
   const verses = await getCollection('verses');
@@ -23,4 +24,9 @@ const { title, artist, backgroundColor, textColor, accentColor, lines, analysisG
   accentColor={accentColor}
 >
   <VerseDisplay lines={lines} />
+  <VerseInteractive
+    client:idle
+    analysisGroups={analysisGroups as any}
+    accentColor={accentColor}
+  />
 </VerseLayout>
