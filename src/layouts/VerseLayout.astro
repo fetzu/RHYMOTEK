@@ -1,0 +1,36 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  artist: string;
+  description?: string;
+  backgroundColor: string;
+  textColor: string;
+  accentColor: string;
+}
+
+const { title, artist, description, backgroundColor, textColor, accentColor } = Astro.props;
+const pageDescription = description ?? `${title} by ${artist} — explore the lyrics and analysis on RHYMOTEK.`;
+---
+
+<BaseLayout title={`${title} — ${artist}`} description={pageDescription}>
+  <div
+    class="min-h-screen flex flex-col items-center justify-center px-4 py-12 transition-colors"
+    style={`--bg: ${backgroundColor}; --text: ${textColor}; --accent: ${accentColor}; background-color: ${backgroundColor}; color: ${textColor};`}
+  >
+    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
+      <a href="/" class="font-display text-lg font-bold tracking-tight opacity-70 hover:opacity-100 transition-opacity" style={`color: ${textColor};`}>
+        RHYMOTEK
+      </a>
+    </header>
+    <main class="w-full max-w-3xl mx-auto">
+      <slot />
+    </main>
+    <footer class="fixed bottom-0 left-0 right-0 px-6 py-4 text-center">
+      <p class="text-sm opacity-50 font-body">
+        {artist} — <em>{title}</em>
+      </p>
+    </footer>
+  </div>
+</BaseLayout>

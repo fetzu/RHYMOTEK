@@ -1,0 +1,120 @@
+{
+  "slug": "midnight-frequencies-v1",
+  "title": "Midnight Frequencies (Verse 1)",
+  "artist": "Demo Artist B",
+  "album": "Night Waves",
+  "year": 2025,
+  "backgroundColor": "#0d1b2a",
+  "textColor": "#e0e1dd",
+  "accentColor": "#00b4d8",
+  "tags": ["demo", "introspective", "flow"],
+  "lines": [
+    {
+      "lineIndex": 0,
+      "words": [
+        { "wordId": "w-0-0", "text": "Tuning" },
+        { "wordId": "w-0-1", "text": "in" },
+        { "wordId": "w-0-2", "text": "to" },
+        { "wordId": "w-0-3", "text": "frequencies" },
+        { "wordId": "w-0-4", "text": "most" },
+        { "wordId": "w-0-5", "text": "can't" },
+        { "wordId": "w-0-6", "text": "hear" }
+      ]
+    },
+    {
+      "lineIndex": 1,
+      "words": [
+        { "wordId": "w-1-0", "text": "Signal" },
+        { "wordId": "w-1-1", "text": "clear" },
+        { "wordId": "w-1-2", "text": "through" },
+        { "wordId": "w-1-3", "text": "the" },
+        { "wordId": "w-1-4", "text": "static" },
+        { "wordId": "w-1-5", "text": "atmosphere" }
+      ]
+    },
+    {
+      "lineIndex": 2,
+      "words": [
+        { "wordId": "w-2-0", "text": "Wavelengths" },
+        { "wordId": "w-2-1", "text": "bending" },
+        { "wordId": "w-2-2", "text": "like" },
+        { "wordId": "w-2-3", "text": "light" },
+        { "wordId": "w-2-4", "text": "through" },
+        { "wordId": "w-2-5", "text": "a" },
+        { "wordId": "w-2-6", "text": "prism" }
+      ]
+    },
+    {
+      "lineIndex": 3,
+      "words": [
+        { "wordId": "w-3-0", "text": "Every" },
+        { "wordId": "w-3-1", "text": "word" },
+        { "wordId": "w-3-2", "text": "I" },
+        { "wordId": "w-3-3", "text": "write" },
+        { "wordId": "w-3-4", "text": "becomes" },
+        { "wordId": "w-3-5", "text": "a" },
+        { "wordId": "w-3-6", "text": "rhythm" }
+      ]
+    }
+  ],
+  "analysisGroups": [
+    {
+      "id": "ag-rhyme-1",
+      "label": "Multi-syllable Rhyme: hear / atmosphere",
+      "triggerWordIds": ["w-0-6", "w-1-5"],
+      "highlightWordIds": ["w-0-6", "w-1-5"],
+      "highlightType": "circle",
+      "connections": [
+        { "from": "w-0-6", "to": "w-1-5", "label": "rhyme" }
+      ],
+      "nodes": [
+        {
+          "id": "n-1",
+          "type": "text",
+          "content": "'Hear' nests inside 'atmosphere' — a technique where the shorter rhyme word is embedded within the longer one. This creates a satisfying echo effect while the longer word adds complexity.",
+          "anchorWordId": "w-1-5",
+          "position": { "angle": 0, "distance": 230 }
+        }
+      ]
+    },
+    {
+      "id": "ag-rhyme-2",
+      "label": "Slant Rhyme: prism / rhythm",
+      "triggerWordIds": ["w-2-6", "w-3-6"],
+      "highlightWordIds": ["w-2-6", "w-3-6"],
+      "highlightType": "circle",
+      "connections": [
+        { "from": "w-2-6", "to": "w-3-6", "label": "slant rhyme" }
+      ],
+      "nodes": [
+        {
+          "id": "n-2",
+          "type": "text",
+          "content": "'Prism' and 'rhythm' form a slant rhyme — they share the '-ism'/'-ithm' consonant pattern but differ in vowel sounds. This near-miss creates tension and sophistication compared to a perfect rhyme.",
+          "anchorWordId": "w-2-6",
+          "position": { "angle": 0, "distance": 220 }
+        }
+      ]
+    },
+    {
+      "id": "ag-metaphor-radio",
+      "label": "Extended Metaphor: Radio / Music",
+      "triggerWordIds": ["w-0-0", "w-1-0", "w-2-0"],
+      "highlightWordIds": ["w-0-0", "w-0-3", "w-1-0", "w-1-4", "w-2-0"],
+      "highlightType": "circle",
+      "connections": [
+        { "from": "w-0-0", "to": "w-1-0" },
+        { "from": "w-1-0", "to": "w-2-0" }
+      ],
+      "nodes": [
+        {
+          "id": "n-3",
+          "type": "text",
+          "content": "The verse builds an extended radio metaphor: 'tuning in,' 'frequencies,' 'signal,' 'static,' 'wavelengths.' This maps the creative process onto radio reception — the artist as both transmitter and receiver, searching for the right frequency to connect.",
+          "anchorWordId": "w-1-0",
+          "position": { "angle": 180, "distance": 260 }
+        }
+      ]
+    }
+  ]
+}

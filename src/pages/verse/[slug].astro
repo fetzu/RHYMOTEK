@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import VerseLayout from '../../layouts/VerseLayout.astro';
+import VerseDisplay from '../../components/VerseDisplay.astro';
+
+export async function getStaticPaths() {
+  const verses = await getCollection('verses');
+  return verses.map((verse) => ({
+    params: { slug: verse.data.slug },
+    props: { verse },
+  }));
+}
+
+const { verse } = Astro.props;
+const { title, artist, backgroundColor, textColor, accentColor, lines, analysisGroups } = verse.data;
+---
+
+<VerseLayout
+  title={title}
+  artist={artist}
+  backgroundColor={backgroundColor}
+  textColor={textColor}
+  accentColor={accentColor}
+>
+  <VerseDisplay lines={lines} />
+</VerseLayout>

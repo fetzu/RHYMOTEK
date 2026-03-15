@@ -1,0 +1,118 @@
+{
+  "slug": "concrete-poetry-v1",
+  "title": "Concrete Poetry (Verse 1)",
+  "artist": "Demo Artist",
+  "album": "Sample Collection",
+  "year": 2024,
+  "backgroundColor": "#1a1a2e",
+  "textColor": "#e8e8e8",
+  "accentColor": "#e94560",
+  "tags": ["demo", "storytelling", "wordplay"],
+  "lines": [
+    {
+      "lineIndex": 0,
+      "words": [
+        { "wordId": "w-0-0", "text": "Concrete" },
+        { "wordId": "w-0-1", "text": "jungle" },
+        { "wordId": "w-0-2", "text": "where" },
+        { "wordId": "w-0-3", "text": "dreams" },
+        { "wordId": "w-0-4", "text": "are" },
+        { "wordId": "w-0-5", "text": "paved" }
+      ]
+    },
+    {
+      "lineIndex": 1,
+      "words": [
+        { "wordId": "w-1-0", "text": "Every" },
+        { "wordId": "w-1-1", "text": "corner" },
+        { "wordId": "w-1-2", "text": "holds" },
+        { "wordId": "w-1-3", "text": "a" },
+        { "wordId": "w-1-4", "text": "story" },
+        { "wordId": "w-1-5", "text": "engraved" }
+      ]
+    },
+    {
+      "lineIndex": 2,
+      "words": [
+        { "wordId": "w-2-0", "text": "Walls" },
+        { "wordId": "w-2-1", "text": "speak" },
+        { "wordId": "w-2-2", "text": "louder" },
+        { "wordId": "w-2-3", "text": "than" },
+        { "wordId": "w-2-4", "text": "the" },
+        { "wordId": "w-2-5", "text": "voices" }
+      ]
+    },
+    {
+      "lineIndex": 3,
+      "words": [
+        { "wordId": "w-3-0", "text": "Written" },
+        { "wordId": "w-3-1", "text": "in" },
+        { "wordId": "w-3-2", "text": "paint" },
+        { "wordId": "w-3-3", "text": "these" },
+        { "wordId": "w-3-4", "text": "are" },
+        { "wordId": "w-3-5", "text": "our" },
+        { "wordId": "w-3-6", "text": "choices" }
+      ]
+    }
+  ],
+  "analysisGroups": [
+    {
+      "id": "ag-rhyme-1",
+      "label": "End Rhyme: paved / engraved",
+      "triggerWordIds": ["w-0-5", "w-1-5"],
+      "highlightWordIds": ["w-0-5", "w-1-5"],
+      "highlightType": "circle",
+      "connections": [
+        { "from": "w-0-5", "to": "w-1-5", "label": "rhyme" }
+      ],
+      "nodes": [
+        {
+          "id": "n-1",
+          "type": "text",
+          "content": "The end rhyme 'paved' / 'engraved' connects the physical landscape with the permanence of memory. Both words share the long 'a' vowel sound and the '-aved' ending, creating a satisfying sonic link.",
+          "anchorWordId": "w-0-5",
+          "position": { "angle": 0, "distance": 220 }
+        }
+      ]
+    },
+    {
+      "id": "ag-metaphor-1",
+      "label": "Extended Metaphor: City as Text",
+      "triggerWordIds": ["w-0-0", "w-2-0", "w-3-0"],
+      "highlightWordIds": ["w-0-0", "w-0-1", "w-2-0", "w-2-1", "w-3-0", "w-3-2"],
+      "highlightType": "circle",
+      "connections": [
+        { "from": "w-0-0", "to": "w-2-0", "label": "metaphor" },
+        { "from": "w-2-0", "to": "w-3-0" }
+      ],
+      "nodes": [
+        {
+          "id": "n-2",
+          "type": "text",
+          "content": "An extended metaphor runs through the verse: the city itself becomes a text to be read. 'Concrete' is both literal (material) and figurative (solid, real). 'Walls speak' personifies architecture. 'Written in paint' refers to graffiti as urban literature.",
+          "anchorWordId": "w-2-0",
+          "position": { "angle": 180, "distance": 250 }
+        }
+      ]
+    },
+    {
+      "id": "ag-rhyme-2",
+      "label": "End Rhyme: voices / choices",
+      "triggerWordIds": ["w-2-5", "w-3-6"],
+      "highlightWordIds": ["w-2-5", "w-3-6"],
+      "highlightType": "circle",
+      "connections": [
+        { "from": "w-2-5", "to": "w-3-6", "label": "rhyme" }
+      ],
+      "nodes": [
+        {
+          "id": "n-3",
+          "type": "text",
+          "content": "The second rhyming couplet 'voices' / 'choices' ties the themes together: the community's voices are expressed through their choices of self-expression.",
+          "anchorWordId": "w-2-5",
+          "position": { "angle": 0, "distance": 200 }
+        }
+      ]
+    }
+  ]
+}

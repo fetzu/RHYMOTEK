@@ -1,0 +1,52 @@
+---
+interface Word {
+  wordId: string;
+  text: string;
+}
+
+interface Line {
+  lineIndex: number;
+  words: Word[];
+}
+
+interface Props {
+  lines: Line[];
+}
+
+const { lines } = Astro.props;
+---
+
+<div class="verse-container text-center" data-verse>
+  {lines.map((line) => (
+    <div class="verse-line my-1">
+      {line.words.map((word, i) => (
+        <>
+          {i > 0 && <span class="inline"> </span>}
+          <span
+            class="verse-word inline cursor-pointer select-none transition-opacity hover:opacity-80"
+            data-word-id={word.wordId}
+            id={word.wordId}
+          >
+            {word.text}
+          </span>
+        </>
+      ))}
+    </div>
+  ))}
+</div>
+
+<style>
+  .verse-container {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    line-height: 1.8;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .verse-word {
+    position: relative;
+    padding: 0.05em 0.1em;
+    border-radius: 0.1em;
+  }
+</style>

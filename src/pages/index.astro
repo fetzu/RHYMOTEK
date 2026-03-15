@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const verses = await getCollection('verses');
+---
+
+<BaseLayout title="Home">
+  <div class="min-h-screen bg-neutral-950 text-neutral-100">
+    <header class="px-6 py-8 text-center">
+      <h1 class="font-display text-5xl font-bold tracking-tight mb-2">RHYMOTEK</h1>
+      <p class="font-body text-lg text-neutral-400">Explore rap lyrics, verse by verse.</p>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 py-12">
+      <ul class="space-y-6">
+        {verses.map((verse) => (
+          <li>
+            <a
+              href={`/verse/${verse.data.slug}`}
+              class="group block rounded-xl p-6 transition-all hover:scale-[1.02]"
+              style={`background-color: ${verse.data.backgroundColor}; color: ${verse.data.textColor};`}
+            >
+              <h2 class="font-display text-xl font-semibold group-hover:opacity-90">
+                {verse.data.title}
+              </h2>
+              <p class="mt-1 text-sm opacity-60">
+                {verse.data.artist}
+                {verse.data.album && ` — ${verse.data.album}`}
+                {verse.data.year && ` (${verse.data.year})`}
+              </p>
+              {verse.data.tags.length > 0 && (
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {verse.data.tags.map((tag: string) => (
+                    <span class="text-xs px-2 py-0.5 rounded-full opacity-50 border border-current">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
+  </div>
+</BaseLayout>
