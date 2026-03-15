@@ -23,7 +23,7 @@ jobs:
         run: npx astro check
 
       - name: Build TinaCMS
-        run: npx tinacms build
+        run: npx tinacms build --local
 
       - name: Build Astro
         run: npx astro build
