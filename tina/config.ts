@@ -1,4 +1,5 @@
 import { defineConfig, type TinaField } from 'tinacms';
+import AnnotationEditor from './fields/AnnotationEditor';
 
 const positionFields: TinaField[] = [
   {
@@ -112,6 +113,10 @@ export default defineConfig({
             name: 'analysisGroups',
             label: 'Analysis Groups',
             list: true,
+            ui: {
+              // @ts-ignore - TinaCMS custom field component
+              component: AnnotationEditor,
+            },
             fields: [
               { type: 'string', name: 'id', label: 'Group ID', required: true },
               { type: 'string', name: 'label', label: 'Label', required: true },
