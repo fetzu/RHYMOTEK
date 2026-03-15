@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
 
 interface Props {
   title: string;
@@ -19,11 +20,7 @@ const pageDescription = description ?? `${title} by ${artist} — explore the ly
     class="min-h-screen flex flex-col items-center justify-center px-4 py-12 transition-colors"
     style={`--bg: ${backgroundColor}; --text: ${textColor}; --accent: ${accentColor}; background-color: ${backgroundColor}; color: ${textColor};`}
   >
-    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
-      <a href="/" class="font-display text-lg font-bold tracking-tight opacity-70 hover:opacity-100 transition-opacity" style={`color: ${textColor};`}>
-        RHYMOTEK
-      </a>
-    </header>
+    <Header textColor={textColor} />
     <main class="w-full max-w-3xl mx-auto">
       <slot />
     </main>

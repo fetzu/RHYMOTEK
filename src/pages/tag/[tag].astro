@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const verses = await getCollection('verses');
+  const tagSet = new Set<string>();
+  verses.forEach((v) => v.data.tags.forEach((t: string) => tagSet.add(t)));
+  return [...tagSet].map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      verses: verses.filter((v) => v.data.tags.includes(tag)),
+    },
+  }));
+}
+
+const { tag, verses } = Astro.props;
+---
+
+<BaseLayout title={`#${tag} — Verses`}>
+  <div class="min-h-screen bg-neutral-950 text-neutral-100">
+    <Header />
+    <main class="max-w-2xl mx-auto px-6 pt-20 pb-12">
+      <h1 class="font-display text-3xl font-bold mb-2">#{tag}</h1>
+      <p class="text-neutral-400 mb-8">{verses.length} verse{verses.length !== 1 ? 's' : ''}</p>
+
+      <ul class="space-y-4">
+        {verses.map((verse) => (
+          <li>
+            <a
+              href={`/verse/${verse.data.slug}`}
+              class="group block rounded-xl p-5 transition-all hover:scale-[1.02]"
+              style={`background-color: ${verse.data.backgroundColor}; color: ${verse.data.textColor};`}
+            >
+              <h2 class="font-display text-lg font-semibold group-hover:opacity-90">
+                {verse.data.title}
+              </h2>
+              <p class="mt-1 text-sm opacity-60">
+                {verse.data.artist}
+                {verse.data.album && ` — ${verse.data.album}`}
+              </p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
+  </div>
+</BaseLayout>

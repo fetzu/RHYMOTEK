@@ -13,7 +13,8 @@ export async function getStaticPaths() {
 }
 
 const { verse } = Astro.props;
-const { title, artist, backgroundColor, textColor, accentColor, lines, analysisGroups } = verse.data;
+const { title, artist, album, year, backgroundColor, textColor, accentColor, lines, tags, analysisGroups } = verse.data;
+const verseText = lines.map((l) => l.words.map((w) => w.text).join(' ')).join(' / ');
 ---
 
 <VerseLayout
@@ -23,7 +24,15 @@ const { title, artist, backgroundColor, textColor, accentColor, lines, analysisG
   textColor={textColor}
   accentColor={accentColor}
 >
-  <VerseDisplay lines={lines} />
+  <div data-pagefind-body>
+    <div data-pagefind-meta={`title:${title}`}></div>
+    <div data-pagefind-meta={`artist:${artist}`}></div>
+    {album && <div data-pagefind-meta={`album:${album}`}></div>}
+    {year && <div data-pagefind-meta={`year:${year}`}></div>}
+    {tags?.map((tag: string) => <div data-pagefind-filter={`tag:${tag}`}></div>)}
+    <div data-pagefind-filter={`artist:${artist}`}></div>
+    <VerseDisplay lines={lines} />
+  </div>
   <VerseInteractive
     client:idle
     analysisGroups={analysisGroups as any}

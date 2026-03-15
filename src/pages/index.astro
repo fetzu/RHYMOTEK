@@ -3,13 +3,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const verses = await getCollection('verses');
+const artists = [...new Set(verses.map((v) => v.data.artist))];
+const tags = [...new Set(verses.flatMap((v) => v.data.tags))];
 ---
 
 <BaseLayout title="Home">
   <div class="min-h-screen bg-neutral-950 text-neutral-100">
-    <header class="px-6 py-8 text-center">
+    <header class="px-6 pt-8 pb-4 text-center">
       <h1 class="font-display text-5xl font-bold tracking-tight mb-2">RHYMOTEK</h1>
-      <p class="font-body text-lg text-neutral-400">Explore rap lyrics, verse by verse.</p>
+      <p class="font-body text-lg text-neutral-400 mb-4">Explore rap lyrics, verse by verse.</p>
+      <nav class="flex items-center justify-center gap-4 text-sm font-body text-neutral-400">
+        <a href="/search" class="hover:text-neutral-100 transition-colors">Search</a>
+        <span class="opacity-30">|</span>
+        <a href="/random" class="hover:text-neutral-100 transition-colors">Random Verse</a>
+      </nav>
     </header>
 
     <main class="max-w-2xl mx-auto px-6 py-12">
@@ -42,6 +49,38 @@ const verses = await getCollection('verses');
           </li>
         ))}
       </ul>
+
+      {artists.length > 0 && (
+        <section class="mt-16">
+          <h2 class="font-display text-xl font-semibold mb-4 text-neutral-300">Artists</h2>
+          <div class="flex flex-wrap gap-2">
+            {artists.map((artist) => (
+              <a
+                href={`/artist/${artist.toLowerCase().replace(/\s+/g, '-')}`}
+                class="text-sm px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:border-neutral-500 transition-colors"
+              >
+                {artist}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {tags.length > 0 && (
+        <section class="mt-8">
+          <h2 class="font-display text-xl font-semibold mb-4 text-neutral-300">Tags</h2>
+          <div class="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <a
+                href={`/tag/${tag}`}
+                class="text-sm px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 hover:text-neutral-100 hover:border-neutral-500 transition-colors"
+              >
+                #{tag}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   </div>
 </BaseLayout>

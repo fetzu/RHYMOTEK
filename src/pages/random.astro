@@ -1,0 +1,10 @@
+---
+import { getCollection } from 'astro:content';
+
+export const prerender = false;
+
+const verses = await getCollection('verses');
+const randomVerse = verses[Math.floor(Math.random() * verses.length)];
+
+return Astro.redirect(`/verse/${randomVerse.data.slug}/`, 302);
+---

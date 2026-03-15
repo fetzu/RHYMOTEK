@@ -44,6 +44,7 @@ const verseSchema = z.object({
   textColor: z.string(),
   accentColor: z.string(),
   tags: z.array(z.string()).default([]),
+  verseText: z.string().optional(),
   lines: z.array(
     z.object({
       lineIndex: z.number(),

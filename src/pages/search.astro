@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+---
+
+<BaseLayout title="Search">
+  <div class="min-h-screen bg-neutral-950 text-neutral-100">
+    <Header />
+
+    <main class="max-w-2xl mx-auto px-6 pt-20 pb-8">
+      <h1 class="font-display text-3xl font-bold mb-8 text-center">Search Verses</h1>
+      <div id="search" class="pagefind-search"></div>
+    </main>
+  </div>
+</BaseLayout>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script>
+  async function initSearch() {
+    // @ts-ignore
+    const { PagefindUI } = await import('/pagefind/pagefind-ui.js');
+    new PagefindUI({
+      element: '#search',
+      showSubResults: false,
+      showImages: false,
+    });
+  }
+  initSearch();
+</script>
+
+<style is:global>
+  .pagefind-ui__search-input {
+    background-color: #1a1a2e !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #333 !important;
+    border-radius: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+  }
+  .pagefind-ui__result-link {
+    color: #e94560 !important;
+  }
+  .pagefind-ui__result {
+    border-top-color: #333 !important;
+    padding: 1rem 0 !important;
+  }
+  .pagefind-ui__result-excerpt {
+    color: #a0a0a0 !important;
+  }
+  .pagefind-ui__message {
+    color: #888 !important;
+  }
+</style>
