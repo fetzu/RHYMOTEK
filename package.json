@@ -22,7 +22,7 @@
     "@astrojs/sitemap": "^3.7.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.1",
-    "@tinacms/cli": "^2.1.9",
+    "@tinacms/cli": "^2.2.1",
     "astro": "^6.0.4",
     "d3-force": "^3.0.0",
     "leader-line-new": "^1.1.9",
@@ -30,7 +30,7 @@
     "preact": "^10.29.0",
     "rough-notation": "^0.5.1",
     "tailwindcss": "^4.2.1",
-    "tinacms": "^3.6.1",
+    "tinacms": "^3.7.1",
     "typescript": "^5.9.3",
     "wrangler": "^4.73.0"
   },
