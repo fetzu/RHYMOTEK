@@ -9,7 +9,11 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://rhymotek.com',
   integrations: [preact(), sitemap()],
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
   vite: {
     plugins: [tailwindcss()],
   },
