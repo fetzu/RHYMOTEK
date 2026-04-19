@@ -17,7 +17,11 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     ssr: {
-      external: ['path', 'fs', 'os', 'crypto', 'stream', 'util'],
+      external: ['path', 'fs', 'os', 'crypto', 'stream', 'util', 'events', 'assert'],
+      noExternal: [],
+    },
+    optimizeDeps: {
+      exclude: ['path', 'fs', 'os', 'crypto', 'stream', 'util'],
     },
   },
 });
