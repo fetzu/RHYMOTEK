@@ -23,7 +23,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "@tinacms/cli": "^2.2.1",
-    "astro": "^6.1.2",
+    "astro": "^6.1.8",
     "d3-force": "^3.0.0",
     "leader-line-new": "^1.1.9",
     "pagefind": "^1.4.0",
