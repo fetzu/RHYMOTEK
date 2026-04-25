@@ -1,0 +1,3 @@
+compatibility_flags = ["nodejs_compat"]
+
+# Enables Node.js compatibility for Cloudflare Workers, fixing SSR build failure due to Node.js 'path' module import.
