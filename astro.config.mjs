@@ -13,6 +13,11 @@ export default defineConfig({
     platformProxy: {
       enabled: true,
     },
+    runtime: {
+      bindings: {},
+      multiBindingCache: true,
+      compatibility_flags: ['nodejs_compat'],
+    },
   }),
   vite: {
     plugins: [tailwindcss()],
