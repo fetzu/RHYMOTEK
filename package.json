@@ -31,7 +31,7 @@
     "rough-notation": "^0.5.1",
     "tailwindcss": "^4.2.2",
     "tinacms": "^3.8.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "wrangler": "^4.79.0"
   },
   "overrides": {
