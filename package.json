@@ -30,7 +30,7 @@
     "preact": "^10.29.0",
     "rough-notation": "^0.5.1",
     "tailwindcss": "^4.2.2",
-    "tinacms": "^3.7.1",
+    "tinacms": "^3.8.1",
     "typescript": "^5.9.3",
     "wrangler": "^4.79.0"
   },
