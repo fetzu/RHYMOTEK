@@ -51,7 +51,7 @@
     "smol-toml": "^1.6.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.0.1",
+    "@commitlint/cli": "^21.2.0",
     "@commitlint/config-conventional": "^20.5.3",
     "@playwright/test": "^1.60.0",
     "@types/d3-force": "^3.0.10",
