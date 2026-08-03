@@ -37,19 +37,34 @@ updates:
       - "fetzu"
     commit-message:
       prefix: "chore"
-    # TinaCMS requires react-router-dom ^6.30.3. Anything newer makes the
-    # admin router match no routes, so /admin renders a blank page. Ignore
-    # the majors so a version-update PR can't reintroduce that breakage.
+    # Majors that TinaCMS's own pins make unsafe. Both break only at runtime
+    # in /admin -- `tinacms build` and `astro check` still pass -- so CI does
+    # NOT catch either one. Do not merge a PR that reintroduces them.
+    #
+    #   react-router / react-router-dom >=7
+    #     tinacms requires react-router-dom ^6.30.3. Newer majors make the
+    #     admin router match no routes, so /admin renders a blank page.
+    #
+    #   react-final-form >=7
+    #     v7 needs peer final-form ^5, but tinacms pins final-form to exactly
+    #     4.20.10 and react-final-form ^6.5.9. Installing v7 therefore yields
+    #     two coexisting copies (6.5.9+final-form@4 for TinaCMS, 7.x+
+    #     final-form@5 for us). tina/fields/AnnotationEditor.tsx calls
+    #     useFormState(), which is context-based, so the editor would resolve
+    #     a different module instance than TinaCMS's form provider and stop
+    #     seeing the form. Revisit once TinaCMS moves to final-form 5.
     #
     # Note: `ignore` does NOT keep security-update jobs green -- it only turns
     # `security_update_not_possible` into `all_versions_ignored`, which still
     # fails. Dependabot *security updates* are therefore disabled at the repo
     # level instead (automated-security-fixes API); alerts stay visible.
-    # See the note below about the advisories that cannot be resolved.
+    # See the note above about the advisories that cannot be resolved.
     ignore:
       - dependency-name: "react-router"
         versions: [">=7.0.0"]
       - dependency-name: "react-router-dom"
+        versions: [">=7.0.0"]
+      - dependency-name: "react-final-form"
         versions: [">=7.0.0"]
 
   - package-ecosystem: "github-actions"
