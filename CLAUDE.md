@@ -6,11 +6,15 @@ RHYMOTEK is an interactive rap lyrics analysis website. Verses are stored as JSO
 
 ## Commands
 
-- `npm run dev` -- start TinaCMS + Astro dev server (port 4321, CMS admin at /admin)
-- `npm run dev:astro` -- start Astro only (no CMS)
-- `npm run build` -- full production build: `tinacms build && astro build && npx pagefind --site dist/client`
-- `npx playwright test` -- run E2E tests (requires `npx playwright install --with-deps chromium` first)
-- `npx astro check` -- TypeScript type checking
+This project uses **pnpm**. There is no `package-lock.json` -- running `npm install` resolves a different tree than the committed `pnpm-lock.yaml` and will break the build. Use `pnpm exec`, not `npx`.
+
+- `pnpm run dev` -- start TinaCMS + Astro dev server (port 4321, CMS admin at /admin)
+- `pnpm run dev:astro` -- start Astro only (no CMS)
+- `pnpm run build` -- full production build: `tinacms build && astro build && pnpm exec pagefind --site dist/client`
+- `pnpm exec playwright test` -- run E2E tests (requires `pnpm exec playwright install --with-deps chromium` first)
+- `pnpm exec astro check` -- TypeScript type checking
+
+CI runs `pnpm install --frozen-lockfile`, so `package.json` and `pnpm-lock.yaml` must stay in sync. After changing dependencies, run `pnpm install` and commit the updated lockfile.
 
 ## Architecture
 
@@ -89,9 +93,31 @@ The `analysisGroups` field uses a custom React component instead of TinaCMS's de
 - Each verse defines its own backgroundColor, textColor, accentColor
 - TinaCMS editor uses CSS Modules (`styles.module.css`) compiled to `styles_` prefixed classes
 
+## Dependencies
+
+**pnpm settings live in `pnpm-workspace.yaml`, not `package.json`.** pnpm ignores npm's top-level `overrides` field entirely, so security pins placed there have no effect. `overrides` and `allowBuilds` both belong in `pnpm-workspace.yaml`.
+
+**Anything `tina/fields/**` imports must be declared in `package.json`.** Those files import `react`, `react-dom` and `react-final-form` directly. npm's flat `node_modules` hoisted them; pnpm's strict layout does not, and `tinacms build` fails with "Could not resolve".
+
+### Upgrades that break the CMS without failing CI
+
+TinaCMS pins several of its own dependencies. Bumping past those pins breaks `/admin` at **runtime only** -- `tinacms build` and `astro check` still pass, so CI does not catch any of these. Do not apply them, even though they look routine:
+
+| Package | Constraint | Failure |
+|---|---|---|
+| `react-router` / `react-router-dom` | tinacms needs `^6.30.3` | v7+ makes the admin router match no routes; `/admin` renders blank |
+| `react-final-form` | tinacms pins `final-form` to exactly `4.20.10` | v7 needs `final-form ^5`, so two copies coexist and `useFormState()` in AnnotationEditor loses TinaCMS's form context |
+| `esbuild` | TinaCMS bundles with Vite 4 | 0.28+ cannot transform its legacy browser target; the pin is scoped to `>=0.25` to leave TinaCMS's copies alone |
+
+These are listed under `ignore` in `.github/dependabot.yml`. Dependabot alerts are on, but security *updates* are disabled -- every open advisory is transitive under TinaCMS with no resolvable fix, and none reach the public site.
+
+## Deployment Config
+
+`nodejs_compat` must stay in `compatibility_flags` in `wrangler.jsonc` -- SSR imports Node built-ins and fails to resolve them otherwise. Wrangler ignores `wrangler.toml` completely whenever a `wrangler.jsonc` exists, so the flag belongs in the `.jsonc`.
+
 ## Conventions
 
 - Commits follow Conventional Commits (enforced by commitlint + Husky)
 - TypeScript throughout; shared types in `src/lib/types.ts`, editor types in `tina/fields/editor/types.ts`
 - Preact for public site components, React for TinaCMS admin components
-- Node.js >= 22.12.0 required
+- Node.js >= 22.12.0 required; pnpm version is pinned via `packageManager` in `package.json`
