@@ -6,12 +6,22 @@
     "./worker-configuration.d.ts"
   ],
   "exclude": [
+    "node_modules",
     "dist",
     "tina/fields",
     "public"
   ],
   "compilerOptions": {
+    // Must stay "react". The TinaCMS dev/build server runs its own Vite from
+    // the project root and resolves JSX options from THIS file, applying them
+    // to TinaCMS's own sources under node_modules -- include/exclude does not
+    // scope it. Setting "preact" here compiles TinaCMS's main.tsx with Preact's
+    // jsx runtime while it calls React's createRoot, so React throws
+    // "Objects are not valid as a React child" and /admin renders blank.
+    //
+    // The public site's Preact components opt in per file with
+    // /** @jsxImportSource preact */ (src/components/*.tsx).
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "react"
   }
 }

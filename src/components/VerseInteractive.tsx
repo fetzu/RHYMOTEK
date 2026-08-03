@@ -1,3 +1,4 @@
+/** @jsxImportSource preact */
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import type { AnalysisGroup, AnalysisNodeData } from '../lib/types';
 import { circleWords, clearAnnotations, type HighlightType } from '../lib/annotations';
