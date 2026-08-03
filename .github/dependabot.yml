@@ -1,3 +1,26 @@
+# Dependabot *security updates* are disabled for this repo (via the
+# automated-security-fixes API). Dependabot *alerts* remain enabled, so
+# vulnerabilities are still reported in the Security tab -- only the automated
+# fix PRs are off.
+#
+# Why: every open advisory is a transitive dependency of TinaCMS with no
+# resolvable fix, so each security-update job failed with
+# `security_update_not_possible` on every push. TinaCMS itself is already at
+# its newest published version (tinacms 3.11.0, @tinacms/cli 2.5.6, and all
+# @tinacms/* sub-packages at latest), and the offending versions cannot be
+# forced:
+#   js-yaml 3.14.2  @tinacms/graphql calls safeLoad/safeDump, removed in v4.
+#                   The advisory names 3.15.0 as the fix, which was never
+#                   published -- the 3.x line ends at 3.14.x.
+#   react-router    tinacms requires ^6.30.3; v7 blanks the admin router.
+#   esbuild 0.18/24 bumping breaks TinaCMS's Vite 4 legacy browser target.
+#   vite 4, markdown-it 12, linkify-it 3, js-cookie 2
+#                   held by @tinacms/cli and graphiql@3.0.0-alpha.1.
+#
+# None of these reach the public site -- src/ never imports tinacms, and none
+# appear in the built client bundle. They are confined to /admin and to build
+# tooling. Re-enable once TinaCMS moves off graphiql-alpha and Vite 4:
+#   gh api -X PUT repos/fetzu/RHYMOTEK/automated-security-fixes
 version: 2
 updates:
   - package-ecosystem: "npm"
@@ -14,20 +37,20 @@ updates:
       - "fetzu"
     commit-message:
       prefix: "chore"
-    # These are transitive dependencies pinned by TinaCMS, with no fixed
-    # version Dependabot can resolve. Every security-update attempt therefore
-    # exits with `security_update_not_possible` and fails the Dependabot
-    # workflow run on each push. Ignoring them keeps the runs green; drop the
-    # entry once TinaCMS moves off the offending version.
-    #   js-yaml     3.14.2 -> advisory wants 3.15.0, which was never published
-    #               (the 3.x line ends at 3.14.x; the fix is only in 4.x)
-    #   linkify-it  3.0.3  -> wants 5.0.2, held by markdown-it@12 via graphiql
-    #   react-router 6.30.4 -> wants 8.3.0, but tinacms requires ^6.30.3
+    # TinaCMS requires react-router-dom ^6.30.3. Anything newer makes the
+    # admin router match no routes, so /admin renders a blank page. Ignore
+    # the majors so a version-update PR can't reintroduce that breakage.
+    #
+    # Note: `ignore` does NOT keep security-update jobs green -- it only turns
+    # `security_update_not_possible` into `all_versions_ignored`, which still
+    # fails. Dependabot *security updates* are therefore disabled at the repo
+    # level instead (automated-security-fixes API); alerts stay visible.
+    # See the note below about the advisories that cannot be resolved.
     ignore:
-      - dependency-name: "js-yaml"
-      - dependency-name: "linkify-it"
       - dependency-name: "react-router"
+        versions: [">=7.0.0"]
       - dependency-name: "react-router-dom"
+        versions: [">=7.0.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
