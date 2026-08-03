@@ -1,6 +1,9 @@
 {
 	"compatibility_date": "2026-03-12",
-	"compatibility_flags": ["global_fetch_strictly_public"],
+	// nodejs_compat is required for SSR: the Astro/Cloudflare server entry
+	// pulls in Node built-ins ("path" et al). Previously declared in a
+	// wrangler.toml that wrangler ignores whenever this .jsonc exists.
+	"compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
 	"name": "tmp-rhymotek-init",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {

@@ -1,7 +1,51 @@
 allowBuilds:
-  better-sqlite3: set this to true or false
-  core-js: set this to true or false
-  esbuild: set this to true or false
-  protobufjs: set this to true or false
-  sharp: set this to true or false
-  workerd: set this to true or false
+  better-sqlite3: true
+  core-js: false
+  esbuild: true
+  protobufjs: false
+  sharp: true
+  workerd: true
+
+# Security pins for transitive dependencies (advisory remediation).
+# pnpm reads overrides from this file, NOT from package.json.
+# Scoped keys (`pkg@major`) pin one release line only, so older consumers
+# that legitimately need an earlier major are left alone.
+overrides:
+  # existing pins, raised to the currently-patched floor
+  undici: ^7.29.0
+  dompurify: ^3.4.12
+  mermaid: ^11.15.0
+  lodash: ^4.17.24
+  # NOTE: react-router / react-router-dom are deliberately NOT pinned.
+  # TinaCMS's admin requires react-router-dom ^6.30.3; forcing v7 (or the v8
+  # the advisory asks for) makes the admin router match no routes and render a
+  # blank page. This pin was previously inert because pnpm ignored the npm-style
+  # `overrides` in package.json. The advisory is accepted for now: it affects
+  # the TinaCMS admin bundle only, not the public site. Revisit when TinaCMS
+  # ships support for a newer react-router.
+  # Scoped: TinaCMS's bundler pins esbuild 0.18/0.24 and its Vite 4 legacy
+  # browser target cannot be transformed by esbuild 0.28. Only the modern
+  # line (used by Astro/Vite 7) is moved to the patched release.
+  "esbuild@>=0.25": ^0.28.1
+  picomatch: ^2.3.2
+  fast-xml-parser: ^5.7.1
+  path-to-regexp: ^0.1.13
+  yaml: ^2.8.3
+  h3: ^1.15.9
+  brace-expansion: ^2.1.4
+  smol-toml: ^1.6.1
+  # additional advisory remediation
+  postcss: ^8.5.23
+  svgo: ^4.0.2
+  immutable: ^5.1.8
+  qs: ^6.15.2
+  sharp: ^0.35.2
+  "fast-uri@3": ^3.1.5
+  "protobufjs@7": ^7.6.5
+  "body-parser@1": ^1.20.6
+  "js-yaml@4": ^4.3.0
+  "markdown-it@14": ^14.1.2
+  "linkify-it@5": ^5.0.2
+  "vite@7": ^7.3.5
+  "@babel/core": ^7.29.1
+  "@opentelemetry/core": ^2.8.0

@@ -9,16 +9,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://rhymotek.com',
   integrations: [preact(), sitemap()],
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true,
-    },
-    runtime: {
-      bindings: {},
-      multiBindingCache: true,
-      compatibility_flags: ['nodejs_compat'],
-    },
-  }),
+  // @astrojs/cloudflare >=13.6 delegates local bindings/runtime setup to
+  // @cloudflare/vite-plugin, so the old `platformProxy` and `runtime` options
+  // no longer exist. Compatibility flags now live in wrangler.jsonc.
+  adapter: cloudflare(),
   vite: {
     plugins: [tailwindcss()],
     ssr: {

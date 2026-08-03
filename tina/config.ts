@@ -114,8 +114,10 @@ export default defineConfig({
             label: 'Analysis Groups',
             list: true,
             ui: {
-              // @ts-ignore - TinaCMS custom field component
-              component: AnnotationEditor,
+              // TinaCMS types `component` against its own built-in field props;
+              // AnnotationEditor takes a wider custom prop shape. Cast only this
+              // property so the rest of the field definition stays type-checked.
+              component: AnnotationEditor as any,
             },
             fields: [
               { type: 'string', name: 'id', label: 'Group ID', required: true },
