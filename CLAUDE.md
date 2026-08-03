@@ -70,7 +70,7 @@ The `analysisGroups` field uses a custom React component instead of TinaCMS's de
 - `tina/fields/editor/useEditorState.ts` -- useReducer with undo/redo history
 - `tina/fields/editor/types.ts` -- editor-specific TypeScript types
 
-**Important**: TinaCMS editor components must use **React** (not Preact). Files require the `/** @jsxImportSource react */` pragma because Astro's default JSX transform targets Preact. TinaCMS's Vite prebuild compiles these into `tina/__generated__/config.prebuild.jsx`.
+**Important**: TinaCMS editor components must use **React** (not Preact). React is now the JSX default project-wide (see JSX runtime below), so these files do not strictly need the `/** @jsxImportSource react */` pragma any more -- they still carry it, which is harmless and explicit. TinaCMS's Vite prebuild compiles them into `tina/__generated__/config.prebuild.jsx`.
 
 **CSS caveat**: TinaCMS generates `tina/__generated__/config.prebuild.css` from CSS modules but does NOT inject it into the admin page. The editor injects its own CSS via a `<style>` tag at runtime (see `EDITOR_CSS` in EditorModal.tsx).
 
@@ -110,6 +110,30 @@ TinaCMS pins several of its own dependencies. Bumping past those pins breaks `/a
 | `esbuild` | TinaCMS bundles with Vite 4 | 0.28+ cannot transform its legacy browser target; the pin is scoped to `>=0.25` to leave TinaCMS's copies alone |
 
 These are listed under `ignore` in `.github/dependabot.yml`. Dependabot alerts are on, but security *updates* are disabled -- every open advisory is transitive under TinaCMS with no resolvable fix, and none reach the public site.
+
+## JSX Runtime (do not change without reading this)
+
+**`jsxImportSource` in the root `tsconfig.json` must stay `"react"`.**
+
+The TinaCMS CLI runs its own Vite from the project root and resolves JSX options from the root `tsconfig.json`, then applies them to TinaCMS's own sources under `node_modules`. `include`/`exclude` does **not** scope this -- adding `node_modules` to `exclude` changes nothing.
+
+Setting it to `"preact"` compiles `@tinacms/app`'s `main.tsx` with Preact's jsx runtime while that file calls React's `createRoot`:
+
+```js
+import { jsxDEV } from ".../preact/jsx-runtime/..."   // Preact
+root.render(jsxDEV(React.StrictMode, { children: jsxDEV(App, {}) }))  // -> React DOM
+```
+
+React throws `Objects are not valid as a React child (found: object with keys {type, props, key, ref, __k, __, __b, __e, __c, ...})` -- those underscore keys are Preact VNode internals -- unmounts the tree, and leaves `#root` empty. `/admin` renders blank in dev **and** in the production bundle.
+
+That error only reaches `window.onerror` during React's commit phase, so the browser console looks clean and the page simply sits blank. `tinacms build` and `astro check` both still exit 0 while emitting a broken admin bundle, so CI does not catch it either.
+
+Consequently the public site's Preact components opt in per file:
+
+- `src/components/AnalysisNode.tsx` and `src/components/VerseInteractive.tsx` start with `/** @jsxImportSource preact */`
+- **any new `.tsx` under `src/` that renders Preact JSX needs that pragma too**
+
+To verify a change here, load `/admin` in a browser and confirm the Verses collection lists files -- a build that exits 0 proves nothing.
 
 ## Deployment Config
 
