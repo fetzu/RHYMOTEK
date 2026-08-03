@@ -14,6 +14,20 @@ updates:
       - "fetzu"
     commit-message:
       prefix: "chore"
+    # These are transitive dependencies pinned by TinaCMS, with no fixed
+    # version Dependabot can resolve. Every security-update attempt therefore
+    # exits with `security_update_not_possible` and fails the Dependabot
+    # workflow run on each push. Ignoring them keeps the runs green; drop the
+    # entry once TinaCMS moves off the offending version.
+    #   js-yaml     3.14.2 -> advisory wants 3.15.0, which was never published
+    #               (the 3.x line ends at 3.14.x; the fix is only in 4.x)
+    #   linkify-it  3.0.3  -> wants 5.0.2, held by markdown-it@12 via graphiql
+    #   react-router 6.30.4 -> wants 8.3.0, but tinacms requires ^6.30.3
+    ignore:
+      - dependency-name: "js-yaml"
+      - dependency-name: "linkify-it"
+      - dependency-name: "react-router"
+      - dependency-name: "react-router-dom"
 
   - package-ecosystem: "github-actions"
     directory: "/"
