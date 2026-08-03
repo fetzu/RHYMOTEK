@@ -12,7 +12,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npx astro preview --port 4321',
+    command: 'pnpm exec astro preview --port 4321',
     port: 4321,
     reuseExistingServer: !process.env.CI,
   },

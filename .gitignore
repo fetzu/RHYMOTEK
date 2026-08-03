@@ -29,3 +29,7 @@ pnpm-debug.log*
 
 # TinaCMS generated
 tina/__generated__/
+
+# Playwright
+playwright-report/
+test-results/
