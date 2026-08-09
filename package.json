@@ -36,7 +36,7 @@
     "tailwindcss": "^4.3.3",
     "tinacms": "^3.11.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.118.0"
+    "wrangler": "^4.119.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
