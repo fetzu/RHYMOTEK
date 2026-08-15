@@ -3,23 +3,38 @@
 # vulnerabilities are still reported in the Security tab -- only the automated
 # fix PRs are off.
 #
-# Why: every open advisory is a transitive dependency of TinaCMS with no
+# Why: the advisories that remain open are transitive under TinaCMS with no
 # resolvable fix, so each security-update job failed with
 # `security_update_not_possible` on every push. TinaCMS itself is already at
 # its newest published version (tinacms 3.11.0, @tinacms/cli 2.5.6, and all
-# @tinacms/* sub-packages at latest), and the offending versions cannot be
-# forced:
+# @tinacms/* sub-packages at latest), and these versions cannot be forced:
 #   js-yaml 3.14.2  @tinacms/graphql calls safeLoad/safeDump, removed in v4.
 #                   The advisory names 3.15.0 as the fix, which was never
 #                   published -- the 3.x line ends at 3.14.x.
-#   react-router    tinacms requires ^6.30.3; v7 blanks the admin router.
+#   react-router    tinacms requires ^6.30.3; v7 blanks the admin router. The
+#                   advisory asks for >=6.30.5, also never published (6.x
+#                   ends at 6.30.4).
 #   esbuild 0.18/24 bumping breaks TinaCMS's Vite 4 legacy browser target.
-#   vite 4, markdown-it 12, linkify-it 3, js-cookie 2
+#                   The advisory asks for >=0.24.3; 0.24 ends at 0.24.2.
+#   vite 4, markdown-it 12, linkify-it 3, codemirror 5, js-cookie 2
 #                   held by @tinacms/cli and graphiql@3.0.0-alpha.1.
+#
+# NOT every advisory is stuck, though -- packages TinaCMS pulls in but does
+# not pin can be fixed with a scoped override in pnpm-workspace.yaml. mermaid,
+# dompurify and nanoid were all cleared that way. Before writing off a new
+# alert, compare its fix version against the resolved version; existing pins
+# also go stale as upstream ships further fixes.
+#
+# Note that TinaCMS's manifests on GitHub show no version numbers -- the
+# monorepo uses pnpm's catalog protocol ("graphiql": "catalog:"), with the
+# real pin in the catalog block of its root pnpm-workspace.yaml. Read that,
+# or `npm view @tinacms/app@latest dependencies --json`, not the manifest.
 #
 # None of these reach the public site -- src/ never imports tinacms, and none
 # appear in the built client bundle. They are confined to /admin and to build
-# tooling. Re-enable once TinaCMS moves off graphiql-alpha and Vite 4:
+# tooling. tinacms and @tinacms/cli are in devDependencies so that Dependabot
+# reports the whole set as development scope. Re-enable once TinaCMS moves off
+# graphiql-alpha and Vite 4:
 #   gh api -X PUT repos/fetzu/RHYMOTEK/automated-security-fixes
 version: 2
 updates:

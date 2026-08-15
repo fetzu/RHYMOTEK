@@ -6,8 +6,8 @@ settings:
 
 overrides:
   undici: ^7.29.0
-  dompurify: ^3.4.12
-  mermaid: ^11.15.0
+  dompurify: ^3.4.13
+  mermaid: ^11.16.1
   lodash: ^4.17.24
   esbuild@>=0.25: ^0.28.1
   picomatch: ^2.3.2
@@ -31,6 +31,8 @@ overrides:
   vite@7: ^7.3.5
   '@babel/core': ^7.29.1
   '@opentelemetry/core': ^2.8.0
+  nanoid@3: ^3.3.18
+  nanoid@5: ^5.1.16
 
 importers:
 
@@ -57,9 +59,6 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@7.3.6(@types/node@25.7.0)(jiti@1.21.7)(lightningcss@1.33.0)(yaml@2.9.0))
-      '@tinacms/cli':
-        specifier: ^2.5.6
-        version: 2.5.6(@codemirror/language@6.0.0)(@types/node@25.7.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(abstract-level@1.0.4)(immer@10.2.0)(lightningcss@1.32.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.60.3)(scheduler@0.27.0)(slate-dom@0.114.0(slate@0.114.0))(slate@0.114.0)(supports-color@10.2.2)(use-sync-external-store@1.6.0(react@18.3.1))(yaml@2.9.0)
       astro:
         specifier: ^7.1.6
         version: 7.1.6(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@25.7.0)(jiti@1.21.7)(rollup@4.60.3)(yaml@2.9.0)
@@ -90,9 +89,6 @@ importers:
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
-      tinacms:
-        specifier: ^3.11.0
-        version: 3.11.0(@types/node@25.7.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(abstract-level@1.0.4)(immer@10.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.27.0)(slate-dom@0.114.0(slate@0.114.0))(slate@0.114.0)(supports-color@10.2.2)(typescript@6.0.3)(use-sync-external-store@1.6.0(react@18.3.1))
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -109,6 +105,9 @@ importers:
       '@playwright/test':
         specifier: ^1.62.1
         version: 1.62.1
+      '@tinacms/cli':
+        specifier: ^2.5.6
+        version: 2.5.6(@codemirror/language@6.0.0)(@types/node@25.7.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(abstract-level@1.0.4)(immer@10.2.0)(lightningcss@1.32.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.60.3)(scheduler@0.27.0)(slate-dom@0.114.0(slate@0.114.0))(slate@0.114.0)(supports-color@10.2.2)(use-sync-external-store@1.6.0(react@18.3.1))(yaml@2.9.0)
       '@types/d3-force':
         specifier: ^3.0.10
         version: 3.0.10
@@ -121,6 +120,9 @@ importers:
       husky:
         specifier: ^9.1.7
         version: 9.1.7
+      tinacms:
+        specifier: ^3.11.0
+        version: 3.11.0(@types/node@25.7.0)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(abstract-level@1.0.4)(immer@10.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(scheduler@0.27.0)(slate-dom@0.114.0(slate@0.114.0))(slate@0.114.0)(supports-color@10.2.2)(typescript@6.0.3)(use-sync-external-store@1.6.0(react@18.3.1))
 
 packages:
 
@@ -1716,8 +1718,8 @@ packages:
   '@marijn/find-cluster-break@1.0.2':
     resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
 
-  '@mermaid-js/parser@1.1.1':
-    resolution: {integrity: sha512-VuHdsYMK1bT6X2JbcAaWAhugTRvRBRyuZgd+c22swUeI9g/ntaxF7CY7dYarhZovofCbUNO0G7JesfmNtjYOCw==}
+  '@mermaid-js/parser@1.2.0':
+    resolution: {integrity: sha512-oYPyv8A4As1yH5Bx+04iQEQxXuIQDe0GKCNSRgao6z8AM9jixXIfP0vsppRLvGf+nKIOb9/LdpWA4YuJiVvESA==}
 
   '@monaco-editor/loader@1.7.0':
     resolution: {integrity: sha512-gIwR1HrJrrx+vfyOhYmCZ0/JcWqG5kbfG7+d3f/C1LXk2EvzAbHSg3MQ5lO2sMlo9izoAZ04shohfKLVT6crVA==}
@@ -4520,8 +4522,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.4.12:
-    resolution: {integrity: sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg==}
+  dompurify@3.4.13:
+    resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -5633,8 +5635,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  mermaid@11.15.0:
-    resolution: {integrity: sha512-pTMbcf3rWdtLiYGpmoTjHEpeY8seiy6sR+9nD7LOs8KfUbHE4lOUAprTRqRAcWSQ6MQpdX+YEsxShtGsINtPtw==}
+  mermaid@11.16.1:
+    resolution: {integrity: sha512-TQsq6u22fAn3rek5VOubrhKPo1g5hwC3FXUN9hiyupTckcYiGuuKGkNQrKYwGJkXUxZdojwRG46gsSCFZMDp4g==}
 
   meros@1.3.2:
     resolution: {integrity: sha512-Q3mobPbvEx7XbwhnC1J1r60+5H6EZyNccdzSz0eGexJRwouUtTZxPVRGdqKtxlpD84ScK4+tIGldkqDtCKdI0A==}
@@ -5855,13 +5857,13 @@ packages:
       react: '*'
       react-dom: '*'
 
-  nanoid@3.3.16:
-    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
+  nanoid@3.3.18:
+    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.1.11:
-    resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
+  nanoid@5.1.16:
+    resolution: {integrity: sha512-kVrnsrJqMR8+oLJnGEmSWw9BivK5mt7H3FZatVRjrc5wGqFYuBxX1yG7+A7Gi5AefkX6t/oCkizcQgpu0cY1dQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -9126,7 +9128,7 @@ snapshots:
 
   '@marijn/find-cluster-break@1.0.2': {}
 
-  '@mermaid-js/parser@1.1.1':
+  '@mermaid-js/parser@1.2.0':
     dependencies:
       '@chevrotain/types': 11.1.2
 
@@ -11125,7 +11127,7 @@ snapshots:
       jotai-optics: 0.4.0(jotai@2.8.4(@types/react@19.2.18)(react@18.3.1))(optics-ts@2.4.1)
       jotai-x: 2.3.2(@types/react@19.2.18)(jotai@2.8.4(@types/react@19.2.18)(react@18.3.1))(react@18.3.1)
       lodash: 4.18.1
-      nanoid: 5.1.11
+      nanoid: 5.1.16
       optics-ts: 2.4.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -12279,7 +12281,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.4.12:
+  dompurify@3.4.13:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -13504,11 +13506,11 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  mermaid@11.15.0:
+  mermaid@11.16.1:
     dependencies:
       '@braintree/sanitize-url': 7.1.2
       '@iconify/utils': 3.1.3
-      '@mermaid-js/parser': 1.1.1
+      '@mermaid-js/parser': 1.2.0
       '@types/d3': 7.4.3
       '@upsetjs/venn.js': 2.0.0
       cytoscape: 3.33.3
@@ -13518,7 +13520,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.14
       dayjs: 1.11.20
-      dompurify: 3.4.12
+      dompurify: 3.4.13
       es-toolkit: 1.46.1
       katex: 0.16.46
       khroma: 2.1.0
@@ -13916,9 +13918,9 @@ snapshots:
       stacktrace-js: 2.0.2
       stylis: 4.4.0
 
-  nanoid@3.3.16: {}
+  nanoid@3.3.18: {}
 
-  nanoid@5.1.11: {}
+  nanoid@5.1.16: {}
 
   napi-build-utils@2.0.0: {}
 
@@ -14192,7 +14194,7 @@ snapshots:
 
   postcss@8.5.25:
     dependencies:
-      nanoid: 3.3.16
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -14206,7 +14208,7 @@ snapshots:
       '@posthog/core': 1.29.1
       '@posthog/types': 1.373.4
       core-js: 3.49.0
-      dompurify: 3.4.12
+      dompurify: 3.4.13
       fflate: 0.4.8
       preact: 10.29.1
       query-selector-shadow-dom: 1.0.1
@@ -15261,7 +15263,7 @@ snapshots:
       graphql-tag: 2.12.6(graphql@15.8.0)
       is-hotkey: 0.2.0
       lucide-react: 0.424.0(react@18.3.1)
-      mermaid: 11.15.0
+      mermaid: 11.16.1
       monaco-editor: 0.31.0
       posthog-js: 1.373.4
       prism-react-renderer: 2.4.1(react@18.3.1)
@@ -15362,7 +15364,7 @@ snapshots:
       graphql-tag: 2.12.6(graphql@15.8.0)
       is-hotkey: 0.2.0
       lucide-react: 0.424.0(react@18.3.1)
-      mermaid: 11.15.0
+      mermaid: 11.16.1
       monaco-editor: 0.31.0
       posthog-js: 1.373.4
       prism-react-renderer: 2.4.1(react@18.3.1)

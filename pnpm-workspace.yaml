@@ -13,8 +13,8 @@ allowBuilds:
 overrides:
   # existing pins, raised to the currently-patched floor
   undici: ^7.29.0
-  dompurify: ^3.4.12
-  mermaid: ^11.15.0
+  dompurify: ^3.4.13
+  mermaid: ^11.16.1
   lodash: ^4.17.24
   # NOTE: react-router / react-router-dom are deliberately NOT pinned.
   # TinaCMS's admin requires react-router-dom ^6.30.3; forcing v7 (or the v8
@@ -49,3 +49,8 @@ overrides:
   "vite@7": ^7.3.5
   "@babel/core": ^7.29.1
   "@opentelemetry/core": ^2.8.0
+  # Two copies coexist and each line has its own fix release, so both are
+  # scoped rather than pinned globally: 3.x comes in via postcss (and so
+  # reaches the public site's build), 5.x via @udecode/plate-core.
+  "nanoid@3": ^3.3.18
+  "nanoid@5": ^5.1.16

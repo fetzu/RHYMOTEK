@@ -99,6 +99,8 @@ The `analysisGroups` field uses a custom React component instead of TinaCMS's de
 
 **Anything `tina/fields/**` imports must be declared in `package.json`.** Those files import `react`, `react-dom` and `react-final-form` directly. npm's flat `node_modules` hoisted them; pnpm's strict layout does not, and `tinacms build` fails with "Could not resolve".
 
+**`tinacms` and `@tinacms/cli` live in `devDependencies`, deliberately.** Nothing under `src/` imports either one -- they are build-time only (`tinacms build`, and `tina/**` at compile time). Keeping them out of `dependencies` makes Dependabot classify the whole TinaCMS advisory tree as *development* scope, which is filterable in the Security tab. This works because CI runs a plain `pnpm install --frozen-lockfile`; **if a build environment ever sets `NODE_ENV=production`, pnpm will skip devDependencies and `tinacms build` will fail.** Nothing in this repo sets it today.
+
 ### Upgrades that break the CMS without failing CI
 
 TinaCMS pins several of its own dependencies. Bumping past those pins breaks `/admin` at **runtime only** -- `tinacms build` and `astro check` still pass, so CI does not catch any of these. Do not apply them, even though they look routine:
@@ -109,7 +111,26 @@ TinaCMS pins several of its own dependencies. Bumping past those pins breaks `/a
 | `react-final-form` | tinacms pins `final-form` to exactly `4.20.10` | v7 needs `final-form ^5`, so two copies coexist and `useFormState()` in AnnotationEditor loses TinaCMS's form context |
 | `esbuild` | TinaCMS bundles with Vite 4 | 0.28+ cannot transform its legacy browser target; the pin is scoped to `>=0.25` to leave TinaCMS's copies alone |
 
-These are listed under `ignore` in `.github/dependabot.yml`. Dependabot alerts are on, but security *updates* are disabled -- every open advisory is transitive under TinaCMS with no resolvable fix, and none reach the public site.
+These are listed under `ignore` in `.github/dependabot.yml`. Dependabot alerts are on, but security *updates* are disabled.
+
+### Reading TinaCMS's own version pins
+
+**TinaCMS's package manifests do not contain version numbers.** The monorepo uses pnpm's catalog protocol, so `packages/@tinacms/app/package.json` reads `"graphiql": "catalog:"` and the real version lives in the catalog block of TinaCMS's root `pnpm-workspace.yaml`. pnpm substitutes the concrete version at publish time, so the npm tarball *does* carry a hard pin even though GitHub shows none. Checking a TinaCMS manifest on GitHub will therefore understate how pinned a dependency is -- read the catalog, or read the published manifest:
+
+```bash
+npm view @tinacms/app@latest dependencies --json
+```
+
+### Which advisories are actually stuck
+
+Not all of them are, despite what this file used to claim. Two distinct groups:
+
+- **Resolvable by a pin in `pnpm-workspace.yaml`** -- packages TinaCMS pulls in transitively but does not pin. `mermaid`, `dompurify` and `nanoid` were all cleared this way. When a new alert lands, check the fix version against the resolved version before assuming it is stuck; existing pins also go stale as upstream ships further fixes.
+- **Genuinely stuck** -- held by a TinaCMS catalog pin, or with no published fix at all. `vite@4.5.14`, `js-yaml@3.14.2`, `react-router-dom@6.30.4`, plus `markdown-it@12` / `linkify-it@3` / `codemirror@5`, which are all dragged in by `graphiql@3.0.0-alpha.1` -- a 2023 pre-release that TinaCMS pinned in its catalog and never revisited (stable is 5.x).
+
+Note that several advisories name fix versions that were **never published**: `js-yaml >=3.15.0` (3.x ends at 3.14.x), `react-router-dom >=6.30.5` (6.x ends at 6.30.4), `esbuild >=0.24.3` (0.24 ends at 0.24.2). These cannot be resolved by any pin and will sit in the Security tab indefinitely.
+
+None of the remaining advisories reach the public site -- `src/` never imports tinacms, and none appear in the built client bundle.
 
 ## JSX Runtime (do not change without reading this)
 
