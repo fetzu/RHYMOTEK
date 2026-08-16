@@ -23,7 +23,7 @@
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.1.6",
+    "astro": "^7.2.1",
     "d3-force": "^3.0.0",
     "leader-line-new": "^1.1.9",
     "pagefind": "^1.5.2",
