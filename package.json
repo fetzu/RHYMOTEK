@@ -45,6 +45,6 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "husky": "^9.1.7",
-    "tinacms": "^3.11.0"
+    "tinacms": "^3.12.0"
   }
 }
