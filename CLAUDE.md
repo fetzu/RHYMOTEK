@@ -111,7 +111,7 @@ TinaCMS pins several of its own dependencies. Bumping past those pins breaks `/a
 | `react-final-form` | tinacms pins `final-form` to exactly `4.20.10` | v7 needs `final-form ^5`, so two copies coexist and `useFormState()` in AnnotationEditor loses TinaCMS's form context |
 | `esbuild` (for Vite 6) | `@tinacms/cli` 2.6+ bundles with **Vite 6**, whose default `build.target` is `'modules'` -- which includes `safari14` | esbuild **0.27.7+** knows Safari 14.0 has a destructuring bug, so it tries to lower destructuring, cannot, and aborts. Every dependency using `const [a, b] = ...` fails. Vite 6 asks for `esbuild: ^0.25.0` and resolves 0.25.x on its own, which is fine -- **do not add an override that forces it onto the 0.28 line.** Unlike the other rows here, this one *does* fail CI, loudly. |
 
-These are listed under `ignore` in `.github/dependabot.yml`. Dependabot alerts are on, but security *updates* are disabled.
+These are listed under `ignore` in `.github/dependabot.yml`, which also groups peer-linked packages (`wrangler` + `@astrojs/cloudflare`, `tinacms` + `@tinacms/*`) so a pair cannot be half-merged. Dependabot alerts and security updates are both on.
 
 ### Reading TinaCMS's own version pins
 
@@ -129,7 +129,9 @@ npm view @tinacms/app@latest dependencies --json
 - **An upstream release** -- `@tinacms/cli` 2.6 moved off Vite 4 and onto Vite 6, which cleared the whole `vite@4` / `esbuild@0.24` cluster. `@tinacms/app` 2.5.12 moved `graphiql` from the `3.0.0-alpha.1` pre-release to `^4.1.2`, which cleared `markdown-it@12` and `linkify-it@3`.
 - **A backport to an old line** -- this one is easy to write off wrongly. `js-yaml 3.15.0` and `react-router-dom 6.30.5` were both recorded here as fix versions that "were never published"; both have since shipped (3.15.1 and 6.30.6 are what resolve today). A 3.x or 6.x line that looks finished can still get a security backport. **Re-check before concluding a fix does not exist.**
 
-What is actually left is two `react-router` advisories whose only fix is v7, which blanks the admin router (see the table above). `codemirror@5` also remains, via `@graphiql/react`, but carries no open advisory -- a future upstream move to `graphiql` 5.x would drop it.
+What is actually left is two `react-router` advisories whose only fix is v7, which blanks the admin router (see the table above). Both are **dismissed** as tolerable risk, not fixed -- reopen them when TinaCMS supports react-router 7. `codemirror@5` also remains, via `@graphiql/react`, but carries no open advisory; a future upstream move to `graphiql` 5.x would drop it.
+
+**Keep the Security tab at zero open alerts.** An open alert on a dependency listed under `ignore` makes the security-update job fail with `all_versions_ignored` -- `ignore` does not keep those jobs green. If a genuinely unfixable advisory lands, dismiss it with a reason instead of leaving it open.
 
 None of the remaining advisories reach the public site -- `src/` never imports tinacms, and none appear in the built client bundle.
 

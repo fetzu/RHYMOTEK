@@ -1,21 +1,24 @@
-# Dependabot *security updates* are disabled for this repo (via the
-# automated-security-fixes API). Dependabot *alerts* remain enabled, so
-# vulnerabilities are still reported in the Security tab -- only the automated
-# fix PRs are off.
+# Dependabot *security updates* are ENABLED for this repo (via the
+# automated-security-fixes API), as are alerts. They were disabled for a
+# while; the note below explains why, and why that no longer applies.
 #
-# Why: security-update jobs failed with `security_update_not_possible` on
-# every push, because the whole advisory set was transitive under TinaCMS.
-# That set has since shrunk a lot -- see below -- but the two that remain
-# still cannot be auto-fixed, so the jobs would still fail.
+# History: security-update jobs used to fail with `security_update_not_possible`
+# on every push, because the whole advisory set was transitive under TinaCMS
+# with no reachable fix. That set has since emptied out. The last two --
+# GHSA-337j-9hxr-rhxg and GHSA-wrjc-x8rr-h8h6, both react-router -- are
+# dismissed as tolerable risk rather than fixed: their only fix is v7, tinacms
+# requires react-router-dom ^6.30.3, and v7 makes the admin router match no
+# routes so /admin renders blank. They are development scope and absent from
+# the built client bundle. **Reopen them when TinaCMS supports react-router 7.**
 #
-# Still stuck:
-#   react-router / react-router-dom
-#                   Two advisories whose only fix is v7. tinacms requires
-#                   ^6.30.3, and v7 makes the admin router match no routes,
-#                   so /admin renders blank. Listed under `ignore` below.
+# Keep the Security tab at zero open alerts. An open alert on a dependency
+# listed under `ignore` below makes the security-update job fail with
+# `all_versions_ignored` -- `ignore` does not keep those jobs green. If a new
+# advisory lands that genuinely cannot be fixed, dismiss it with a reason
+# rather than adding it to `ignore` and leaving the alert open.
 #
-# Cleared since this note was first written, and worth remembering as a
-# lesson -- do NOT assume an advisory is permanently stuck:
+# Cleared since this file first claimed they were stuck -- worth remembering
+# as a lesson, do NOT assume an advisory is permanently unfixable:
 #   vite 4, esbuild 0.24
 #                   @tinacms/cli 2.6 moved to Vite 6. Whole cluster gone.
 #   markdown-it 12, linkify-it 3
@@ -35,11 +38,11 @@
 # block of its root pnpm-workspace.yaml. Read that, or
 # `npm view @tinacms/app@latest dependencies --json`, not the manifest.
 #
-# Nothing here reaches the public site -- src/ never imports tinacms, and
-# none of it appears in the built client bundle. tinacms and @tinacms/cli are
-# in devDependencies so Dependabot reports the set as development scope.
-# Re-enable security updates once react-router is unblocked:
-#   gh api -X PUT repos/fetzu/RHYMOTEK/automated-security-fixes
+# tinacms and @tinacms/cli are in devDependencies so Dependabot reports the
+# TinaCMS tree as development scope.
+#
+# To disable security updates again:
+#   gh api -X DELETE repos/fetzu/RHYMOTEK/automated-security-fixes
 version: 2
 updates:
   - package-ecosystem: "npm"
@@ -56,6 +59,32 @@ updates:
       - "fetzu"
     commit-message:
       prefix: "chore"
+    # Peer-linked packages, grouped so they move in one PR.
+    #
+    # Dependabot opens one PR per package by default, and merging half of a
+    # peer-linked pair leaves the tree unsatisfiable. Both of these have
+    # already broken main once:
+    #
+    #   cloudflare  @astrojs/cloudflare pulls @cloudflare/vite-plugin, whose
+    #               wrangler peer moves ahead of whatever wrangler PR is open.
+    #               Broke CI twice (57aa6f9, 8d97593): the plugin refuses to
+    #               load the Astro config and `astro check` exits 1.
+    #
+    #   tinacms     @tinacms/cli depends on a matching tinacms and a matching
+    #               @tinacms/app. Merging the cli bump alone pinned
+    #               @tinacms/app to a version predating the graphiql fix,
+    #               so a resolved advisory silently stayed open.
+    groups:
+      cloudflare:
+        patterns:
+          - "wrangler"
+          - "@astrojs/cloudflare"
+          - "@cloudflare/*"
+      tinacms:
+        patterns:
+          - "tinacms"
+          - "@tinacms/*"
+
     # Majors that TinaCMS's own pins make unsafe. Both break only at runtime
     # in /admin -- `tinacms build` and `astro check` still pass -- so CI does
     # NOT catch either one. Do not merge a PR that reintroduces them.
