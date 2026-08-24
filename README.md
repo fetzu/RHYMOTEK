@@ -1,119 +1,87 @@
 # RHYMOTEK
 
-RHYMOTEK is an interactive rap lyrics analysis platform. It presents verses with word-level annotations -- hand-drawn highlights, connection arrows, and mind-map-style analysis nodes -- that readers activate by clicking trigger words. Authors manage content through a visual WYSIWYG editor built into the TinaCMS admin interface.
+RHYMOTEK takes a rap verse, lets you click on a word, and then draws all over it: hand-drawn highlights, arrows running between the words that rhyme, and little analysis bubbles hanging off the ones that earned an explanation. Readers get a static page that stays quiet until they poke it; authors get a WYSIWYG/visual editor instead of a JSON file to hand-edit (the JSON underneath is perfectly hand-editable, it is just not something anyone wants to do twice).
 
-## Tech Stack
+The site is Astro 7 with Preact islands for the parts that need to react to a click, Tailwind 4 for styling, and Cloudflare Workers for hosting. Search is Pagefind, run over the built output rather than a service. The annotations themselves are three libraries each doing one job: rough-notation draws the highlights, leader-line-new draws the arrows, and d3-force works out where the analysis nodes should sit so they stop landing on top of each other. Verses live as JSON under `src/content/verses/` and are edited through TinaCMS, which is Git-backed (a save is a commit, not a database write).
 
-- **Astro 7** -- static site generator with hybrid rendering
-- **Preact** -- lightweight UI components for interactive annotations
-- **TinaCMS** -- Git-backed headless CMS with custom field components
-- **Tailwind CSS 4** -- utility-first styling with typography plugin
-- **Cloudflare Workers** -- edge deployment via `@astrojs/cloudflare`
-- **Pagefind** -- static search indexing
-- **rough-notation** -- animated SVG annotation effects (circles, underlines, boxes)
-- **leader-line-new** -- SVG connector arrows between words
-- **d3-force** -- physics-based layout for analysis node positioning
+## Install
 
-## Prerequisites
-
-- Node.js >= 22.12.0
-- pnpm (the version in `packageManager` is authoritative; `corepack enable` will match it)
-
-This project uses **pnpm**, not npm. There is no `package-lock.json`, so `npm install` will resolve a different tree than the committed `pnpm-lock.yaml` and can produce a build that works locally but fails in CI.
-
-## Development
-
-Install dependencies:
+Node 22.12.0 or newer, plus pnpm (the version in `packageManager` is the authoritative one, `corepack enable` will match it).
 
 ```sh
 pnpm install
 ```
 
-Start the development server with TinaCMS:
+This is a pnpm project and not an npm one: there is no `package-lock.json`, so `npm install` will cheerfully resolve a different tree than the committed `pnpm-lock.yaml` and hand you a build that works on your machine and dies in CI (and the failure never lands anywhere near the package you changed).
+
+## Usage
 
 ```sh
 pnpm run dev
 ```
 
-This runs TinaCMS and Astro together. The site is available at `http://localhost:4321` and the admin interface at `http://localhost:4321/admin`.
-
-To run only the Astro dev server (without TinaCMS):
-
-```sh
-pnpm run dev:astro
-```
-
-## Building for Production
+That runs TinaCMS and Astro together: the site on `http://localhost:4321`, the admin on `http://localhost:4321/admin`. If you only care about the public side, `pnpm run dev:astro` skips the CMS and starts a good deal faster (the admin bundle is the slow half, by some margin).
 
 ```sh
 pnpm run build
 ```
 
-This runs three steps in sequence:
-1. `tinacms build` -- compiles the CMS admin interface
-2. `astro build` -- builds the static site to `dist/`
-3. `pagefind --site dist/client` -- indexes the built pages for search
+Three steps in a trench coat: `tinacms build` compiles the admin bundle, `astro build` writes the site into `dist/`, and `pagefind --site dist/client` indexes what was just built. Going straight to `astro build` leaves you with a stale admin and no search index at all (easy to forget, and the symptom is a site that looks fine until you open the admin or the search page).
 
-## Deployment
-
-The project is configured for Cloudflare Workers deployment. The `wrangler.jsonc` file defines the worker configuration.
-
-Deploy using Wrangler:
-
-```sh
-pnpm exec wrangler deploy
-```
-
-The production build outputs to `dist/` with client assets in `dist/client/` and server-side code for the Cloudflare Workers runtime.
-
-### Environment Notes
-
-- TinaCMS runs in **local mode** by default (reads/writes JSON files on disk). For production CMS access, configure TinaCMS Cloud with `clientId` and `token` in `tina/config.ts`.
-- The Cloudflare Workers adapter handles server-side rendering for dynamic routes. Static pages are pre-rendered at build time.
-- `nodejs_compat` must stay in `compatibility_flags` in `wrangler.jsonc`. SSR pulls in Node built-ins, and the build fails to resolve them without it. Note that Wrangler ignores `wrangler.toml` entirely whenever a `wrangler.jsonc` is present, so the flag belongs in the `.jsonc`.
-
-## Testing
-
-The project uses Playwright for end-to-end tests:
+Tests are Playwright, against the built site:
 
 ```sh
 pnpm exec playwright install --with-deps chromium
 pnpm exec playwright test
 ```
 
+## Deployment
+
+Cloudflare Workers, configured in `wrangler.jsonc` (there is no `wrangler.toml`, and that is deliberate, see below):
+
+```sh
+pnpm exec wrangler deploy
+```
+
+The build leaves client assets in `dist/client/` and the SSR entry next to them. Static pages are pre-rendered at build time, the rest is served by the worker.
+
+Two things are worth knowing before touching that config. `nodejs_compat` has to stay in `compatibility_flags`, because SSR pulls in Node built-ins and the build cannot resolve them otherwise. And Wrangler ignores `wrangler.toml` completely whenever a `wrangler.jsonc` exists, so the flag belongs in the `.jsonc` (this is exactly as fun to debug as it sounds).
+
+TinaCMS runs in local mode by default and reads/writes the JSON files on disk. Editing content in production means configuring TinaCMS Cloud with a `clientId` and `token` in `tina/config.ts` (nothing in this repo configures it, so that path is on you).
+
 ## CI
 
-GitHub Actions runs on push/PR to `main`:
-1. `pnpm install --frozen-lockfile` -- fails if `pnpm-lock.yaml` is out of sync with `package.json`
-2. Type checking (`astro check`)
-3. Full production build (TinaCMS + Astro + Pagefind)
-4. Playwright E2E tests against the built site
+GitHub Actions on push and PR to `main`: `pnpm install --frozen-lockfile` (which fails outright if `pnpm-lock.yaml` has drifted from `package.json`), then `astro check`, then the full production build, then Playwright against the result.
 
-## Dependencies
+## Things that will bite you
 
-Dependency settings live in **`pnpm-workspace.yaml`**, not `package.json`. pnpm does not read npm's top-level `overrides` field, so security pins placed there are silently ignored.
+Dependency settings live in `pnpm-workspace.yaml`, not `package.json`. pnpm does not read npm's top-level `overrides` field at all, so a security pin put there is not "applied", it is silently ignored (no warning, no error, it simply does nothing).
 
-### Upgrades that look routine but break the CMS
-
-TinaCMS pins several of its own dependencies, and bumping them past those pins breaks the admin at **runtime only** -- `tinacms build` and `astro check` both still pass, so CI does not catch any of these. Do not merge a dependency PR that reintroduces one:
+TinaCMS pins a good number of its own dependencies, and the interesting failures are the ones CI cannot see: `tinacms build` and `astro check` both exit 0 while emitting an admin bundle that renders a blank page. Do not merge a dependency PR that brings one of these back:
 
 | Package | Constraint | What breaks |
 |---|---|---|
-| `react-router` / `react-router-dom` | tinacms needs `^6.30.3` | v7+ makes the admin router match no routes; `/admin` renders blank |
-| `react-final-form` | tinacms pins `final-form` to exactly `4.20.10` | v7 needs `final-form ^5`, so two copies coexist and `useFormState()` in the annotation editor loses TinaCMS's form context |
-| `esbuild` | TinaCMS bundles with Vite 4 | 0.28+ cannot transform its legacy browser target; the pin is scoped to `>=0.25` to leave TinaCMS's copies alone |
+| `react-router` / `react-router-dom` | tinacms needs `^6.30.3` | v7+ makes the admin router match no routes, so `/admin` renders blank |
+| `react-final-form` | tinacms pins `final-form` to exactly `4.20.10` | v7 wants `final-form ^5`, two copies end up coexisting, and `useFormState()` in the annotation editor stops seeing TinaCMS's form |
+| `esbuild` | `@tinacms/cli` 2.6+ bundles with Vite 6, whose default `build.target` still includes `safari14` | esbuild 0.27.7+ knows Safari 14.0 has a destructuring bug, tries to lower every `const [a, b] = ...` in the bundle, cannot, and gives up. Vite 6 asks for `^0.25.0` and resolves that fine on its own: do NOT add an override pushing it onto the 0.28 line |
 
-These are listed under `ignore` in `.github/dependabot.yml` with the reasoning inline.
+Each of those sits in the `ignore` block of `.github/dependabot.yml` with the reasoning written next to it. That file also groups the packages whose versions are chained together (`wrangler` with `@astrojs/cloudflare`, `tinacms` with `@tinacms/*`), because merging half of a peer-linked pair leaves the tree unsatisfiable, which has already broken `main` twice.
 
-### Security alerts
+One more trap deserves its own paragraph, and it is documented at length in `CLAUDE.md`: `jsxImportSource` in the root `tsconfig.json` must stay `"react"`. Setting it to `"preact"` compiles TinaCMS's own sources with the wrong JSX runtime and blanks `/admin` in dev and in production, while the build and the type check both still exit 0 (the only way to catch this one is to open the page and look at it).
 
-Dependabot **alerts** are enabled; Dependabot **security updates** are disabled (`automated-security-fixes` API). Every open advisory is a transitive dependency of TinaCMS with no resolvable fix -- most conclusively, `@tinacms/graphql` calls js-yaml's `safeLoad`/`safeDump`, which v4 removed -- so each security-update job failed on every push. None of the affected packages reach the public site: `src/` never imports tinacms and none appear in the built client bundle. Re-enable once TinaCMS moves off `graphiql@3.0.0-alpha.1` and Vite 4:
+## Security alerts
+
+Dependabot alerts and security updates are both enabled, and the Security tab is meant to sit at zero open alerts. That is a rule rather than tidiness: an open alert on a dependency listed under `ignore` makes the security-update job fail with `all_versions_ignored`, so an advisory that genuinely cannot be fixed (or, more honestly, cannot be fixed without breaking the admin) gets dismissed with a written reason instead of being left to rot.
+
+Two react-router advisories are dismissed as tolerable risk rather than fixed, because their only fix is v7 and v7 blanks the admin router. They are development scope and do not reach the public site: `src/` never imports tinacms, and a verse page loads exactly two JavaScript files (Astro's client runtime and the annotation island), so everything TinaCMS drags in stays behind `/admin`. Reopen them the day TinaCMS supports react-router 7.
+
+A warning if you go digging through TinaCMS's own versions: its package manifests do not contain any. The monorepo uses pnpm's catalog protocol, so a manifest reads `"graphiql": "catalog:"` while the real pin sits in the catalog block of TinaCMS's root `pnpm-workspace.yaml`. Reading the manifest on GitHub will understate how pinned things are every single time (the version string you are grepping for is simply not in that file). Read the catalog, or ask npm:
 
 ```sh
-gh api -X PUT repos/fetzu/RHYMOTEK/automated-security-fixes
+npm view @tinacms/app@latest dependencies --json
 ```
 
-## Project Structure
+## Project structure
 
 ```
 src/
@@ -131,6 +99,8 @@ public/               Static assets (images, icons)
 tests/                Playwright E2E tests
 ```
 
+The Preact/React split is not an accident: everything under `src/` is Preact, everything under `tina/` is React, because TinaCMS insists on it (mixing the two is the `jsxImportSource` trap above).
+
 ## Commits
 
-This project uses [Conventional Commits](https://www.conventionalcommits.org/) enforced by commitlint and Husky pre-commit hooks.
+[Conventional Commits](https://www.conventionalcommits.org/), enforced by commitlint through a Husky hook.
