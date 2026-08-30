@@ -6,25 +6,6 @@ allowBuilds:
   sharp: true
   workerd: true
 
-# pnpm 11 gates freshly-published versions behind a minimum release age
-# (default: 24h). These entries were added automatically when the TinaCMS
-# releases carrying the graphiql fix were only hours old, and they are
-# load-bearing for CI -- without them `pnpm install --frozen-lockfile` fails
-# with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION.
-#
-# All seven were published 2026-08-24 ~07:09 UTC, so they clear the 24h
-# cutoff at 2026-08-25 07:09 UTC. Safe to delete this whole block after that
-# -- verify with `pnpm install --frozen-lockfile`, which is what CI runs.
-# Re-added automatically by `pnpm add` whenever a fresh version is pulled in.
-minimumReleaseAgeExclude:
-  - '@tinacms/app@2.5.12'
-  - '@tinacms/cli@2.6.1'
-  - '@tinacms/graphql@2.4.10'
-  - '@tinacms/mdx@2.2.1'
-  - '@tinacms/metrics@2.1.2'
-  - '@tinacms/search@1.2.24'
-  - tinacms@3.12.1
-
 # Security pins for transitive dependencies (advisory remediation).
 # pnpm reads overrides from this file, NOT from package.json.
 # Scoped keys (`pkg@major`) pin one release line only, so older consumers
