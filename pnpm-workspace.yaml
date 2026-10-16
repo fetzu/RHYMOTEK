@@ -54,7 +54,7 @@ overrides:
   "js-yaml@4": ^4.3.0
   "markdown-it@14": ^14.1.2
   "linkify-it@5": ^5.0.2
-  "vite@7": ^7.3.5
+  "@tinacms/cli>vite": ^7.3.5
   "@babel/core": ^7.29.1
   "@opentelemetry/core": ^2.8.0
   # Two copies coexist and each line has its own fix release, so both are
